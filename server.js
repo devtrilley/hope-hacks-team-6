@@ -4,6 +4,8 @@
 const express = require("express"); // express for server app
 const mysql2 = require("mysql2"); // mysql2 modules for interacting with DB
 const dotenv = require("dotenv"); // dotenv for our .dotenv
+const axios = require("axios"); // axios for our API request/fetching on the server side
+const hbs = require("hbs"); // hbs = handlebars
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
