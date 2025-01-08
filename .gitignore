@@ -3,4 +3,4 @@ node_modules
 .env
 
 #.DS_Store files are automatically created by macOS Finder in directories to store metadata, such as icon positions and folder view options.
-.DS_Store
+# .DS_Store
