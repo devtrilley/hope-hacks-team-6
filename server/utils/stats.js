@@ -9,15 +9,16 @@ async function fetchFirstWorlds() {
     const response = await axios.get("https://restcountries.com/v3.1/all");
 
     // Filter our data, then sort it so we only accept countries with a pop. of 10 Mil+
-    const countries = response.data
-      .filter((country) => country.population > 10000000) 
+    const countriesData = response.data
+      .filter((country) => country.population > 10000000)
       .sort((a, b) => b.population - a.population) // Sorts our array from greatest to least
       .slice(0, 20); // Slice only the top 20 countries in our newly sorted list
 
-    return countries;
+    console.log(countriesData); // Check here if you got correct data
+    return countriesData;
   } catch (err) {
     console.error(`Error fetching First World Countries: ${err.message}`);
-    // throw err;
+    console.log(err); // Logging err obj to debug
   }
 }
 

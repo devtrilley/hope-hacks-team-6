@@ -7,6 +7,7 @@ const mysql2 = require("mysql2"); // mysql2 modules for interacting with DB
 const dotenv = require("dotenv"); // dotenv for our .dotenv
 const axios = require("axios"); // axios for our API request/fetching on the server side
 const hbs = require("hbs"); // hbs = handlebars
+const { fetchFirstWorlds } = require("./utils/stats");
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
@@ -32,14 +33,39 @@ app.use(express.json());
 
 // Root Route/endpoint. Index.hbs page for our site
 app.get("/", (req, res) => {
-  // Index.hbs rendered, no ext. needed
+  // index.hbs rendered, no ext. needed
   res.render("index", {
-    title: "Statistics | BookSprouts",
+    title: "Home | BookSprouts",
   });
+});
+
+// Statistics Route/endpoint. statistics.hbs page for our site
+// Async because we're waiting for our fetchFirstWorlds() to fetch top 20 countries from api
+app.get("/stats", async (req, res) => {
+  // Try this block first
+  try {
+    // Waits for func to fetch the top 20 countries
+    const countriesData = await fetchFirstWorlds();
+    console.log(countriesData);
+
+    // statistics.hbs rendered, no ext. needed
+    res.render("stats", {
+      // Title
+      title: "Stats | BookSprouts",
+      // Array of countries
+      firstWorldCountries: countriesData,
+    });
+  } catch (err) {
+    // If there's an error, run this block containing error messages
+    console.error(`Error fetching First World Countries: ${err.message}`);
+    // 500 = Internal Service Error
+    res.status(500).send("Error fetching First World Countries");
+  }
 });
 
 // Starts the Express Server listening at a specific Port
 app.listen(PORT, () => {
+  // render.com will give us this PORT when we deploy
   console.log(`Server is live at http://localhost:${PORT}`);
 });
 
