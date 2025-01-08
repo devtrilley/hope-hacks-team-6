@@ -39,8 +39,16 @@ const bookSuggestions = function (readingLevel, callback) {
     } else {
       // Map through results to extract relevant data
       const books = body.items.slice(0, 15).map((item) => ({
-        title:
+        title: items.volumeInfo.title || "No Title Available",
+        authors: item.volumeInfo.authors
+          ? item.volumeInfo.authors.join(", ")
+          : "Unknown Author", // Uses optional chaining
+        thumbnail:
+          item.volumeInfo.imageLinks?.thumbnail || "No Image Available", // Uses optional chaining
       }));
+      callback(undefined, books);
     }
   });
 };
+
+module.exports = bookSuggestions;
