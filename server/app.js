@@ -7,35 +7,30 @@ const mysql2 = require("mysql2"); // mysql2 modules for interacting with DB
 const dotenv = require("dotenv"); // dotenv for our .dotenv
 const axios = require("axios"); // axios for our API request/fetching on the server side
 const hbs = require("hbs"); // hbs = handlebars
+const cors = require("cors");
 const { fetchFirstWorlds } = require("./utils/stats");
+const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
+const geocode = require("./utils/geocode"); // Import the geocode function
+const findLibraries = require("./utils/libraries"); // Import findLibraries function
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
 const app = express();
-// const publicDirectoryPath = path.join(__dirname, "../../client");
-// console.log(publicDirectoryPath);
 
 const PORT = 3000; // Current port for development
 
-const clientDirPath = path.join(__dirname, "../client");
-const viewsPath = path.join(__dirname, "../templates/views");
-const partialsPath = path.join(__dirname, "../templates/partials");
-app.set("views", viewsPath);
-// SETting up Handlebars as the our view engine
+// SETting up Habdlebars as the our view engine
 // Tells express to use hbs as our view engine. A view engine allwos express to dynamically render hbs templates
 // rather than using static HTML files.
 app.set("view engine", "hbs");
-hbs.registerPartials(partialsPath);
-// Setup static directory to serve
-app.use(express.static(clientDirPath));
 
 // This sets the views directory. Shows express the exact place to find views.
 // __dirname is a special var that gives abs. path of current directory
-app.set("views", path.join(__dirname, "../templates", "views"));
 
-// Serving Static files like Img's and CSS. Give us the abs. path to the client directory
-// console.log(path.join(__dirname, "../client", "img")); // Testing path
-app.use(express.static("client/img"));
+// app.set("views", path.join(__dirname, "../templates", "views"));
+
+// Serving Static files like Img's and CSS. Give us the abs. path to the public directory
+app.use(express.static(path.join(__dirname, "../templates", "public")));
 
 // Middleware to automatically parse JSON data into JS. Comes before routes (Ex: app.get())
 // Without Middleware, app wouldn't understand incoming data
@@ -71,6 +66,76 @@ app.get("/stats", async (req, res) => {
     // 500 = Internal Service Error
     res.status(500).send("Error fetching First World Countries");
   }
+});
+
+// Route to get bookSuggestions function and pass the reading level
+app.get("/readinglevel", (req, res) => {
+  res.render("readinglevel", {
+    title: "Select Your Reading Level",
+  });
+});
+
+app.get("/books", (req, res) => {
+  const level = req.query.level;
+
+  // Fetch books based on the level
+  bookSuggestions(level, (error, books) => {
+    if (error) {
+      console.error("Error from bookSuggestions:", error);
+      return res.render("error", {
+        message: "Unable to fetch books. Please try again.",
+      });
+    }
+
+    // If books found, render the template
+    if (books && books.length > 0) {
+      console.log("Books fetched successfully:", books);
+      return res.render("books", {
+        title: "Suggested Books",
+        level, // Pass the reading level to the template
+        books, // Pass book list to the template
+      });
+    } else {
+      return res.render("error", {
+        message: "No books found for this level",
+      });
+    }
+  });
+});
+
+// Route to get findLibraries function
+app.get("/library", (req, res) => {
+  res.render("library", {
+    title: "Local Libraries",
+  });
+});
+
+app.get("/library", (req, res) => {
+  const address = req.query.address; // Get address from query parameters
+
+  if (!address) {
+    res.status(400).send({ error: "Please provide a valid address" });
+    return;
+  }
+
+  // Get geolocation from address provided
+  geocode(address, (error, { latitude, longitude, location } = {}) => {
+    if (error) {
+      return res.render("error", {
+        message: "Unable to find location. Try again.",
+      });
+    }
+    // Find libraries near thhe geolocation
+    findLibraries(latitude, longitude, (error, libraries) => {
+      if (error) {
+        return res.render("error", {
+          message: "No libraries found near this location.",
+        });
+      }
+      // Render the library.hbs template w/ library data
+      res.render("library", { location, libraries });
+    });
+  });
 });
 
 // Starts the Express Server listening at a specific Port
