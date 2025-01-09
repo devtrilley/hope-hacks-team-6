@@ -16,6 +16,8 @@ const findLibraries = require("./utils/libraries"); // Import findLibraries func
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
 const app = express();
+// const publicDirectoryPath = path.join(__dirname, "../../client");
+// console.log(publicDirectoryPath);
 
 // Allow all origins (for development purposes)
 app.use(cors());
@@ -43,10 +45,6 @@ app.use(express.static(clientDirPath));
 // __dirname is a special var that gives abs. path of current directory
 
 // app.set("views", path.join(__dirname, "../templates", "views"));
-
-// Serving Static files like Img's and CSS. Give us the abs. path to the public directory
-
-// app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware to automatically parse JSON data into JS. Comes before routes (Ex: app.get())
 // Without Middleware, app wouldn't understand incoming data
