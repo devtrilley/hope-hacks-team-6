@@ -1,0 +1,68 @@
+{{! Statistics Page }}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!-- Compiled and minified JavaScript -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="nav-wrapper orange">
+          <a href="#" class="brand-logo center">Statistics | BookSprouts</a>
+          <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><a href="/">Home</a></li>
+            <li><a href="/stats">Statistics</a></li>
+            <li><a href="/about">About</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main class="yellow">
+      <section class="container center">
+        <h1>Illiteracy by Country</h1>
+        <p>See how the United States compares to other First World Nations.</p>
+      </section>
+
+      <section class="container center">
+        <h2>Illiteracy by First World Nations</h2>
+        <ul class="card">
+          {{! Looping for each country in firstWorldCountries array of objs}}
+          {{#each firstWorldCountries}}
+            {{!-- "this" refers to the current country in the loop --}}
+            {{!-- name.common accesses name, .population display population --}}
+            <li>{{this.name.common}} - Population: {{this.population}}</li>
+          {{/each}}
+        </ul>
+      </section>
+
+      <section class="container center">
+        {{! This will be for the 50 states }}
+        <h2>Illiteracy by State</h2>
+        <ul class="card">
+          <li>Kansas</li>
+          <li>Kansas</li>
+          <li>Kansas</li>
+          <li>Kansas</li>
+          <li>Kansas</li>
+        </ul>
+      </section>
+    </main>
+    <footer class="page-footer blue">
+      <div class="container">
+        <p>&copy; 2025 BookSprouts | All Rights Reserved</p>
+      </div>
+    </footer>
+  </body>
+</html>
