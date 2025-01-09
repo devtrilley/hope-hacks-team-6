@@ -15,20 +15,9 @@
   </head>
   <body>
     <section class="main-content">
-      <section class="main-content">
-    <h1>{{title}}</h1>
-    <p>Suggested books for reading level: {{level}}</p>
-
-    <div id="book-container" class="book-grid">
-        {{#each books}}
-       <div class="book-card">
-         <img src="{{this.thumbnail}}" alt="{{this.title}} cover">
-         <h3>{{this.title}}</h3>
-          <p>By: {{this.authors}}</p>
-      </div>
-     {{/each}}
-    </div>
-  </section>
+      <h1>{{title}}</h1>
+      <div id="grade-buttons"></div>
+    </section>
     <script src="/js/app.js"></script>
   </body>
 </html>
