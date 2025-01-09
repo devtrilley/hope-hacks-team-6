@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/client/css/quiz.css">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <title>{{title}}</title>
+</head>
+<body>
+  <main>
+    <div class="container center">
+      <h1>Reading Level Quiz</h1>
+      <p>Please take the reading quiz</p>
+      <form action="">
+        {{! Looping through each question}}
+        {{#each question}}
+          <div class="question">
+            <p>{{this.question}}</p>
+            <div class="options">
+              <label>
+                <input type="radio" name="answer{{this.id}}" value="A" required>
+                {{this.option_a}}
+              </label>
+              <label>
+                <input type="radio" name="answer{{this.id}}" value="B">
+                {{this.option_b}}
+              </label>
+              <label>
+                <input type="radio" name="answer{{this.id}}" value="C">
+                {{this.option_c}}
+              </label>
+              <label>
+                <input type="radio" name="answer{{this.id}}" value="D">
+                {{this.option_d}}
+              </label>
+            </div>
+          </div>
+          {{/each}}
+          <button type="submit">Submit</button>
+      </form>
+    </div>
+  </main>
+
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
