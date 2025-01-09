@@ -16,8 +16,6 @@ const findLibraries = require("./utils/libraries"); // Import findLibraries func
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
 const app = express();
-// const publicDirectoryPath = path.join(__dirname, "../../client");
-// console.log(publicDirectoryPath);
 
 // Allow all origins (for development purposes)
 app.use(cors());
