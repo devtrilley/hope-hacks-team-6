@@ -1,7 +1,8 @@
 const request = require("postman-request");
+const dotenv = require("dotenv").config();
 
 const bookSuggestions = function (readingLevel, callback) {
-  const apiKey = "AIzaSyCF5L78hZhSBIfOzfYH1mT9wPbgNjg0V8M";
+  const apiKey = process.env.BOOKS_API;
 
   const levelQueries = {
     // Define reading levels
@@ -21,6 +22,8 @@ const bookSuggestions = function (readingLevel, callback) {
     query
   )}&maxResults=10&printType=books&fields=items(volumeInfo(title,authors,imageLinks/thumbnail))&key=${apiKey}`;
 
+  console.log("Making API request with URL:", url);
+
   const options = {
     method: "GET",
     url,
@@ -33,21 +36,29 @@ const bookSuggestions = function (readingLevel, callback) {
   // Make request
   request(options, (error, { body } = {}) => {
     if (error) {
-      callback("Unable to connect to Google Books API", undefined);
-    } else if (!body.items || body.items.length === 0) {
-      callback("No books found. Try another reading level.", undefined);
-    } else {
-      // Map through results to extract relevant data
-      const books = body.items.slice(0, 15).map((item) => ({
-        title: items.volumeInfo.title || "No Title Available",
-        authors: item.volumeInfo.authors
-          ? item.volumeInfo.authors.join(", ")
-          : "Unknown Author", // Uses optional chaining
-        thumbnail:
-          item.volumeInfo.imageLinks?.thumbnail || "No Image Available", // Uses optional chaining
-      }));
-      callback(undefined, books);
+      console.error("Error connecting to Google Books API:", error);
+      return callback("Unable to connect to Google Books API", undefined);
     }
+
+    console.log("Full API Response:", JSON.stringify(body, null, 2));
+
+    if (!body.items || body.items.length === 0) {
+      console.warn(`No books found for query:" ${query}`);
+      return callback("No books found. Try another reading level.", undefined);
+    }
+    console.log("Books fetched from API:", body.items);
+
+    // Map through results to extract relevant data
+    const books = body.items.slice(0, 10).map((item) => ({
+      title: item.volumeInfo?.title || "No Title Available",
+      authors: item.volumeInfo?.authors
+        ? item.volumeInfo.authors.join(", ")
+        : "Unknown Author", // Uses optional chaining
+      thumbnail:
+        item.volumeInfo.imageLinks?.thumbnail ||
+        "https://via.placeholder.com/150", // Uses optional chaining & placeholder for null images
+    }));
+    callback(undefined, books);
   });
 };
 

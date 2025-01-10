@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{title}}</title>
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="/css/book.css">
+    <link rel="stylesheet" href="/css/reading.css">
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
@@ -17,22 +17,9 @@
   <body>
     <section class="main-content">
       {{>header}}
-    <h1>{{title}}</h1>
-    <p>Suggested books for reading level: {{level}}</p>
-      <!-- Button to pick another grade level -->
-      <button class="select-grade-button" onclick="window.location.href='/readinglevel'">
-        Pick Another Level
-      </button>
-    <div id="book-container" class="book-grid">
-        {{#each books}}
-       <div class="book-card">
-         <img src="{{this.thumbnail}}" alt="{{this.title}} cover">
-         <h3>{{this.title}}</h3>
-          <p>By: {{this.authors}}</p>
-      </div>
-     {{/each}}
-    </div>
-  </section>
+      <h1>{{title}}</h1>
+      <div id="grade-buttons"></div>
+    </section>
     {{>footer}}
     <script src="/js/app.js"></script>
   </body>
