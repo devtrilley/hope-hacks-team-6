@@ -119,40 +119,49 @@ app.get("/books", (req, res) => {
   });
 });
 
-// Route to get findLibraries function
+// Route to handle the /library request
 app.get("/library", (req, res) => {
   res.render("library", {
-    title: "Local Libraries",
+    title: "Find a Local Library",
   });
 });
 
-app.get("/library", (req, res) => {
-  const address = req.query.address; // Get address from query parameters
+app.get("/local", (req, res) => {
+  console.log("Received address:", req.query.address);  // This will show the address received in the request
 
-  if (!address) {
-    res.status(400).send({ error: "Please provide a valid address" });
-    return;
+  if (!req.query.address) {
+    return res.send({
+      error: "You must provide an address",
+    });
   }
 
-  // Get geolocation from address provided
-  geocode(address, (error, { latitude, longitude, location } = {}) => {
+  // Get latitude and longitude from geocode
+  geocode(req.query.address, (error, { latitude, longitude, location }) => {
     if (error) {
-      return res.render("error", {
-        message: "Unable to find location. Try again.",
-      });
+      return res.send({ error });
     }
-    // Find libraries near thhe geolocation
+    console.log('Latitude:', latitude, 'Longitude:', longitude);  // Log the coordinates
+
+    // Find libraries near the location
     findLibraries(latitude, longitude, (error, libraries) => {
       if (error) {
-        return res.render("error", {
-          message: "No libraries found near this location.",
-        });
+        return res.send({ error });
       }
-      // Render the library.hbs template w/ library data
-      res.render("library", { location, libraries });
+
+      // Log the libraries returned from Places API
+      console.log('Libraries found:', libraries);
+      
+      // Render libraries in view
+      res.render("libraries", {
+        title: "Local Libraries",
+        location,
+        libraries,
+      });
     });
   });
 });
+
+
 
 // Starts the Express Server listening at a specific Port
 app.listen(PORT, () => {

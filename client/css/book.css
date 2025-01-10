@@ -1,0 +1,65 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f3f359, #68e0c6d5);
+  color: #333;
+}
+.main-content {
+  margin: 30px;
+  text-align: center;
+}
+h1 {
+  font-size: 2.5rem;
+  color: #ff6f61;
+  margin-bottom: 20px;
+}
+p {
+  font-size: 1.2rem;
+  color: #777;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.select-grade-button {
+  color: rgb(242, 17, 17);
+  padding: 15px 30px;
+  border-radius: 50px;
+}
+.select-grade-button:hover {
+  transform: translateY(-5px);
+}
+.select-grade-button:focus {
+  outline: none;
+}
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Show 5 books per row */
+  gap: 30px;
+  margin-top: 30px;
+}
+.book-card {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #ffb6b6, #fffae6);
+}
+.book-card:hover {
+  transform: translateY(-10px);
+}
+.book-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.book-card h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-top: 15px;
+}
+.book-card p {
+  color: #555;
+  font-size: 1rem;
+  margin-top: 5px;
+}
