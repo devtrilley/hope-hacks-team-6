@@ -49,7 +49,7 @@ const bookSuggestions = function (readingLevel, callback) {
     console.log("Books fetched from API:", body.items);
 
     // Map through results to extract relevant data
-    const books = body.items.slice(0, 12).map((item) => ({
+    const books = body.items.slice(0, 10).map((item) => ({
       title: item.volumeInfo?.title || "No Title Available",
       authors: item.volumeInfo?.authors
         ? item.volumeInfo.authors.join(", ")
