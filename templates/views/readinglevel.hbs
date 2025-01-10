@@ -15,9 +15,14 @@
     ></script>
   </head>
   <body>
+    {{>header}}
     <section class="main-content">
-      {{>header}}
       <h1>{{title}}</h1>
+      <div class="intro-card">
+      <h2>Welcome to Your Reading Level</h2>
+         <p>Welcome to your personalized reading level selection! Based on your performance in the pre-assessment, we’ve tailored the available options to match your current reading level. Choose a grade level below to discover books, quizzes, and activities designed to enhance your skills and help you grow as a reader. Let’s get started on your reading journey!</p>
+      </div>
+
       <div id="grade-buttons"></div>
     </section>
     {{>footer}}
