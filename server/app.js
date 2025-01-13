@@ -59,14 +59,6 @@ app.use(express.static(clientDirPath));
 // Without Middleware, app wouldn't understand incoming data
 app.use(express.json());
 
-// Root Route/endpoint. Index.hbs page for our site
-app.get("/", (req, res) => {
-  // index.hbs rendered, no ext. needed
-  res.render("index", {
-    title: "Home | BookSprouts",
-  });
-});
-
 // Statistics Route/endpoint. statistics.hbs page for our site
 // Async because we're waiting for our fetchFirstWorlds() to fetch top 20 countries from api
 app.get("/stats", async (req, res) => {
