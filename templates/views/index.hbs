@@ -6,14 +6,67 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="/css/header.css">
-    <title>My Website</title>
+    <link rel="stylesheet" href="/css/homepage.css">
+    <title>Book Sprouts</title>
 </head>
 <body>
     {{> header }}
     <main>
-        <h1>Welcome to My Website</h1>
-        <p>This is the main content.</p>
+    <!-- home page styling -->
+    <div class="hero-section">
+        <div class="text-content">
+            <p>Take Our Quiz Now!</p>
+            <button>Get Started</button>
+        </div>
+            <img class="hero-image" src="/img/hero.webp">
+    </div>
+
+    <div class="book-section">
+         <h3>Our Top Five Books</h3>
+             <div class="carousel">
+                 <a class="carousel-item"><img src="/img/Book1.jpg" alt="Book 1"></a>
+                 <a class="carousel-item"><img src="/img/Book2.jpg" alt="Book 2"></a>
+                 <a class="carousel-item"><img src="/img/Book3.jpg" alt="Book 3"></a>
+                 <a class="carousel-item"><img src="/img/Book4.jpeg" alt="Book 4"></a>
+                 <a class="carousel-item"><img src="/img/Book5.webp" alt="Book 5"></a>
+            </div>
+    </div>
+
+    <!-- mission section -->
+    <h4>What We Believe</h4>
+    <div class="mission-section">
+        <div class="wordContainer">
+            <div class="paragraph">
+                 <p> “Oh, the places you’ll go!” Our mission is to cultivate young minds through the power of literacy, inspiring a lifelong love for reading and learning. We believe children are the architects of our future, and every story they read builds a foundation for a brighter tomorrow. Through books, mentorship, and community engagement, we aim to unlock their potential and open doors to limitless possibilities. As Dr. Seuss reminds us, 'The more that you read, the more things you will know. The more that you learn, the more places you’ll go.'</p>
+             </div>
+
+             <div class="mission-image" >
+                 <img src="/img/childreads.webp"/>
+            </div>
+        </div>
+
+        <div class="wordContainer">
+            <div class="mission-image2" >
+                 <img src="/img/boyReading.webp"/>
+            </div>
+            <div class="paragraph2">
+                 <p> Every child deserves the chance to explore the worlds that books create, where imagination knows no bounds and knowledge sparks endless opportunities. By increasing literacy rates, we empower children to dream bigger, achieve more, and contribute to their communities in meaningful ways. From the first alphabet learned to the stories that shape their character, we’re dedicated to ensuring every child has access to the tools and support they need to thrive. Together, we can turn the page on illiteracy and write a new chapter of hope and possibility.</p>
+             </div>
+        </div>
+    </div>
+
+{{!-- Javascript code for carosuel --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.carousel');
+        var instances = M.Carousel.init(elems, {
+            duration: 200,
+            indicators: true,
+            fullWidth: false,
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </main>
     {{>footer}}
 </body>
