@@ -13,6 +13,8 @@ const bookSuggestions = require("./utils/book"); // Import the bookSuggestions f
 const geocode = require("./utils/geocode"); // Import the geocode function
 const findLibraries = require("./utils/libraries"); // Import findLibraries function
 const { calcIllit } = require("./utils/illiterate");
+const { formatNumber } = require("./utils/format");
+const svgo = require("svgo");
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
@@ -36,18 +38,19 @@ app.set("views", viewsPath);
 app.set("view engine", "hbs");
 hbs.registerPartials(partialsPath);
 
+// Registering helpers
+hbs.registerHelper("calcIllit", calcIllit);
+hbs.registerHelper("formatNumber", formatNumber);
+
 // Setup static directory to serve
 app.use(express.static(clientDirPath));
-
 
 // This sets the views directory. Shows express the exact place to find views.
 // __dirname is a special var that gives abs. path of current directory
 
-
 // Serving Static files like Img's and CSS. Give us the abs. path to the client directory
 // console.log(path.join(__dirname, "../client", "img")); // Testing path
 app.use(express.static("client/img"));
-
 
 // Middleware to automatically parse JSON data into JS. Comes before routes (Ex: app.get())
 // Without Middleware, app wouldn't understand incoming data
