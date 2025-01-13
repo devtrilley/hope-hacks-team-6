@@ -12,7 +12,6 @@ const { fetchFirstWorlds } = require("./utils/stats");
 const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
 const { calcIllit } = require("./utils/illiterate");
 const { formatNumber } = require("./utils/format");
-const svgo = require("svgo");
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
