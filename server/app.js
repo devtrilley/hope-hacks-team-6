@@ -10,8 +10,6 @@ const hbs = require("hbs"); // hbs = handlebars
 const cors = require("cors");
 const { fetchFirstWorlds } = require("./utils/stats");
 const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
-const geocode = require("./utils/geocode"); // Import the geocode function
-const findLibraries = require("./utils/libraries"); // Import findLibraries function
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
@@ -117,50 +115,6 @@ app.get("/books", (req, res) => {
     }
   });
 });
-
-// Route to handle the /library request
-app.get("/library", (req, res) => {
-  res.render("library", {
-    title: "Find a Local Library",
-  });
-});
-
-app.get("/local", (req, res) => {
-  console.log("Received address:", req.query.address);  // This will show the address received in the request
-
-  if (!req.query.address) {
-    return res.send({
-      error: "You must provide an address",
-    });
-  }
-
-  // Get latitude and longitude from geocode
-  geocode(req.query.address, (error, { latitude, longitude, location }) => {
-    if (error) {
-      return res.send({ error });
-    }
-    console.log('Latitude:', latitude, 'Longitude:', longitude);  // Log the coordinates
-
-    // Find libraries near the location
-    findLibraries(latitude, longitude, (error, libraries) => {
-      if (error) {
-        return res.send({ error });
-      }
-
-      // Log the libraries returned from Places API
-      console.log('Libraries found:', libraries);
-      
-      // Render libraries in view
-      res.render("libraries", {
-        title: "Local Libraries",
-        location,
-        libraries,
-      });
-    });
-  });
-});
-
-
 
 // Starts the Express Server listening at a specific Port
 app.listen(PORT, () => {
