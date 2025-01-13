@@ -53,6 +53,12 @@ app.use(express.static("client/img"));
 // Without Middleware, app wouldn't understand incoming data
 app.use(express.json());
 
+app.get("/", async (req,res) => {
+  res.render("index", {
+    title: "Home | BookSprouts",
+  });
+})
+
 // Statistics Route/endpoint. statistics.hbs page for our site
 // Async because we're waiting for our fetchFirstWorlds() to fetch top 20 countries from api
 app.get("/stats", async (req, res) => {
