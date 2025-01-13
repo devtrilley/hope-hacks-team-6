@@ -13,18 +13,7 @@
   </head>
   
   <body>
-    <header>
-      <nav>
-        <div class="nav-wrapper orange">
-          <a href="#" class="brand-logo center">BookSprouts</a>
-          <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><a href="/">Home</a></li>
-            <li><a href="/stats">Statistics</a></li>
-            <li><a href="/about">About</a></li>
-          </ul>
-        </div>
-      </nav>
-    </header>
+    {{> header}}
 
     <main>    
       {{!-- Img without parallax --}}
@@ -154,11 +143,7 @@
       </div>
     </main>
 
-    <footer class="page-footer blue">
-      <div class="container">
-        <p>&copy; 2025 BookSprouts | All Rights Reserved</p>
-      </div>
-    </footer>
+    {{> footer}}
     {{!-- JQuery: Compiled and Minified --}}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Compiled and minified JavaScript -->
