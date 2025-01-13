@@ -17,6 +17,8 @@ const { calcIllit } = require("./utils/illiterate");
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
 const app = express();
+// const publicDirectoryPath = path.join(__dirname, "../../client");
+// console.log(publicDirectoryPath);
 
 // Allow all origins (for development purposes)
 app.use(cors());
@@ -28,32 +30,24 @@ const viewsPath = path.join(__dirname, "../templates/views");
 const partialsPath = path.join(__dirname, "../templates/partials");
 
 app.set("views", viewsPath);
+// SETting up Handlebars as the our view engine
+// Tells express to use hbs as our view engine. A view engine allwos express to dynamically render hbs templates
+// rather than using static HTML files.
 app.set("view engine", "hbs");
 hbs.registerPartials(partialsPath);
-
-// Register Handlebars helper so we can use calcIllit() for illiterate population data
-hbs.registerHelper("calcIllit", (population, illitRate) => {
-  return calcIllit(population, illitRate); // Return calculation results
-});
-
-// Registers helper to format population numbers.
-hbs.registerHelper('formatNumber', (number) => {
-  return number.toLocaleString();
-})
 
 // Setup static directory to serve
 app.use(express.static(clientDirPath));
 
-// Setting up Handlebars as the our view engine
-// Tells express to use hbs as our view engine. A view engine allwos express to dynamically render hbs templates
-// rather than using static HTML files.
-
-// app.set("view engine", "hbs");
 
 // This sets the views directory. Shows express the exact place to find views.
 // __dirname is a special var that gives abs. path of current directory
 
-// app.set("views", path.join(__dirname, "../templates", "views"));
+
+// Serving Static files like Img's and CSS. Give us the abs. path to the client directory
+// console.log(path.join(__dirname, "../client", "img")); // Testing path
+app.use(express.static("client/img"));
+
 
 // Middleware to automatically parse JSON data into JS. Comes before routes (Ex: app.get())
 // Without Middleware, app wouldn't understand incoming data
