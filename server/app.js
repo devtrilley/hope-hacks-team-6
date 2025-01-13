@@ -12,6 +12,7 @@ const { fetchFirstWorlds } = require("./utils/stats");
 const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
 const geocode = require("./utils/geocode"); // Import the geocode function
 const findLibraries = require("./utils/libraries"); // Import findLibraries function
+const { calcIllit } = require("./utils/illiterate");
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
@@ -29,6 +30,16 @@ const partialsPath = path.join(__dirname, "../templates/partials");
 app.set("views", viewsPath);
 app.set("view engine", "hbs");
 hbs.registerPartials(partialsPath);
+
+// Register Handlebars helper so we can use calcIllit() for illiterate population data
+hbs.registerHelper("calcIllit", (population, illitRate) => {
+  return calcIllit(population, illitRate); // Return calculation results
+});
+
+// Registers helper to format population numbers.
+hbs.registerHelper('formatNumber', (number) => {
+  return number.toLocaleString();
+})
 
 // Setup static directory to serve
 app.use(express.static(clientDirPath));
@@ -62,15 +73,15 @@ app.get("/stats", async (req, res) => {
   // Try this block first
   try {
     // Waits for func to fetch the top 20 countries
-    const countriesData = await fetchFirstWorlds();
-    console.log(countriesData);
+    const firstWorldCountries = await fetchFirstWorlds();
+    console.log(firstWorldCountries);
 
     // statistics.hbs rendered, no ext. needed
     res.render("stats", {
       // Title
       title: "Stats | BookSprouts",
       // Array of countries
-      firstWorldCountries: countriesData,
+      firstWorldCountries: firstWorldCountries,
     });
   } catch (err) {
     // If there's an error, run this block containing error messages
