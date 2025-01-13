@@ -8,25 +8,47 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="/css/header.css">
     <title>Document</title>
 </head>
 <body>
+    <!-- Navigation bar -->
     <nav class="nav-wrapper #ffd600 yellow accent-4">
         <div class="container">
-            <ul>
-            <li class="left brand-logo"><a href="#" ><img src ="/img/logo.png"/></a></li>
-            </ul>
-            <!-- <a href="#" class="sidebar-trigger"></a> -->
-            <ul class="brand-logo center #ffd600 yellow accent-4">
-            <li class=""><a href="#">Home</a></li>
-            <li class=""><a href="#">Stats</a></li>
-            <li class=""><a href="#">Quiz</a></li>
-            <li class=""><a href="#">Books</a></li>
+            <!-- Logo section (left-aligned) -->
+            <li class="left brand-logo">
+                <a href="#" ><img src ="logo.png"/></a>
+            </li>
+
+            <!-- Trigger for mobile navigation -->
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger right">
+                <i class="material-icons">menu</i>
+            </a>
+
+            <!-- Desktop navigation Links (hidden on tablet and mobile devices) -->
+            <ul class="center-nav hide-on-med-and-down #ffd600 yellow accent-4">
+                <li><a href="/">Home</a></li>
+                <li><a href="/statistics">Statistics</a></li>
+                <li><a href="/quiz">Quiz</a></li>
+                <li><a href="/readinglevel">Books</a></li>
+                <li><a href="/audioliteracy">Audio Literacy</a></li>
           </ul>
         </div>
-        <ul>
-            <li class="right"><i class="material-icons account-icon">account_circle</i></li>
-        </ul>
     </nav>
+    
+    <!-- Mobile navigation menu -->
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="/">Home</a></li>
+        <li><a href="/statistics">Statistics</a></li>
+        <li><a href="/quiz">Quiz</a></li>
+        <li><a href="/readinglevel">Books</a></li>
+        <li><a href="/audioliteracy">Audio Literacy</a></li>
+ </ul>
+    <script>
+       //Javascript code for the mobile navigatio bar feature
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidenav = document.querySelectorAll('.sidenav');
+             M.Sidenav.init(sidenav);
+        });
+    </script>
+</body>
