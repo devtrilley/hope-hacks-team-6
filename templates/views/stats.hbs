@@ -26,13 +26,9 @@
       </nav>
     </header>
 
-    <main>
-      {{!-- Parallax --}}
-      <div class="parallax-container z-depth-3">
-        <div class="parallax">
-          <img class="responsive-img" src="/parallax.avif">
-        </div>
-      </div>
+    <main>    
+      {{!-- Img without parallax --}}
+      <img class="responsive-img z-depth-5 " src="img/dr-seuss-parallax.svg">
 
       {{!-- Page Heading/Title with subheading --}}
       <div class="container">
@@ -44,40 +40,62 @@
         </div>
       </div>
       
-      
+      <div class="container">
+        <div class="row">
+          <div class="col s12">
+            <h2 class="center">Stats Navigation</h2>
+          </div>
+          <div class="col s12">
+            <div class="col s4 center">
+              <a href="#lowest-state-illit" class="btn waves-effect waves-light pink accent-3 btn-radius">Lowest State</a>
+            </div>
+            <div class="col s4 center">
+              <a href="#first-world" class="btn waves-effect waves-light rounded pink accent-3 btn-radius">First World</a>
+            </div>
+            <div class="col s4 center">
+              <a href="#highest-state-illit" class="btn waves-effect waves-light pink accent-3 btn-radius">Highest State</a>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {{!-- Illiteracy FIRST WORLD --}}
       <div class="container">
         <div class="row">
-          <div class="col s12">
+          <div class="col s12" id="first-world">
             <h2 class="center">Illiteracy by First World Nations</h2>
             <p class="flow-text center">See how the United States' literacy rates compares to the rest of the developed world.</p>
           </div>
         </div>
         <div class="row">
           <div class="col s12">
-            <ul class="card">
+            <ul class="card row">
               {{! Looping for each country in firstWorldCountries array of objs}}
               {{#each firstWorldCountries}}
-                {{!-- "this" refers to the current country in the loop --}}
-                {{!-- name.common accesses name, .population display population --}}
-                <li>{{this.name.common}} - Population: {{this.population}}</li>
+                {{!-- "this" refers to the current country obj in the loop --}}
+                {{!-- country & population we bothed pushed into firstWorldCountries array--}}
+                {{!-- using both formatNumber() and calcIllit() helpers --}}
+                <li class="cus-v-align col s12 m6 l4">
+                  <div class="center">
+                    <img src="{{this.flagUrl}}" alt="{{this.country}} Flag" class="cus-flag responsive-img">
+                  </div>
+
+                  <p class="center"><span class="cus-country-name cus-bold">{{this.country}}</span></p>
+                  <p class="center"><span class="cus-bold cus-subheading">Population</span>: <span class="blue-text pop-text">{{formatNumber this.population}}</span></p>
+                  <p class="center"><span class="cus-bold cus-subheading">Illiterate Population</span>: <span class="red-text pop-text">{{calcIllit this.population this.illitRate}}</span></p>
+                </li>
               {{/each}}
             </ul>
           </div>
           <div class="col s12"></div>
-            <img class="responsive-img" src="/usa-flag.webp" alt="United States of America flag">
-            <figcaption class="center italic">U.S.A. Flag</figcaption>
+            <img class="responsive-img page-flag" src="img/usa-flag.webp" alt="United States of America flag">
+            <figcaption class="center flow-text">In the United States, there are about 330 million people, but around 700,000 of them can’t read or write well enough to do everyday tasks like filling out forms or reading street signs! Even though the U.S. has a lot of schools and libraries, some people still face challenges in learning to read. While part of the reason for this large number is due to the sheer size of the United States, our literacy rate is still higher than most First World countries at 21%. This shows that we need to keep working on making sure everyone has the help and resources they need to become better readers and succeed in life.</figcaption>
           </figure>
         </div>
       </div>
 
-      {{!-- Parallax --}}
-      <div class="parallax-container z-depth-3">
-        <div class="parallax">
-          <img class="responsive-img" src="/parallax.avif">
-        </div>
-      </div>
+      {{!-- Image without parallax --}}
+      <img class="responsive-img  z-depth-5" src="img/neil-parallax.svg">
 
       {{!-- Illiteracy BY STATE --}}
       <div class="container">
@@ -85,68 +103,56 @@
           <h2 class="center">Illiteracy by State</h2>
           <p class="flow-text center">Find out in which states illiteracy is most prevalent.</p>
         </div>
-        <div class="row">
-          <h3>States with Highest Illiteracy Rates</h3>
+        <div class="row" id="highest-state-illit">
+          <h3 class="center">States with Highest Illiteracy Rates</h3>
           <div class="col s12">
-            <ul class="card">
-              <li>California: 23.1% illiterate</li>
-              <li>New York: 22.1% illiterate</li>
-              <li>Florida: 19.7% illiterate</li>
-              <li>Texas: 19.0% illiterate</li>
-              <li>New Jersey: 16.9% illiterate</li>
-              <li>Georgia: 16.7% illiterate</li>
-              <li>New Mexico: 16.5% illiterate</li>
-              <li>Nevada: 16.1% illiterate</li>
-              <li>Louisiana: 16.0% illiterate</li>
-              <li>Mississippi: 16.0% illiterate</li>
+            <ul class="card center red lighten-5">
+              <li class="flow-text"><span class="state">California</span>: <span class="red-text">23.1% illiterate</span></li>
+              <li class="flow-text"><span class="state">New York</span>: <span class="red-text">22.1% illiterate</span></li>
+              <li class="flow-text"><span class="state">Florida</span>: <span class="red-text">19.7% illiterate</span></li>
+              <li class="flow-text"><span class="state">Texas</span>: <span class="red-text">19.0% illiterate</span></li>
+              <li class="flow-text"><span class="state">New Jersey</span>: <span class="red-text">16.9% illiterate</span></li>
+              <li class="flow-text"><span class="state">Georgia</span>: <span class="red-text">16.7% illiterate</span></li>
+              <li class="flow-text"><span class="state">New Mexico</span>: <span class="red-text">16.5% illiterate</span></li>
+              <li class="flow-text"><span class="state">Nevada</span>: <span class="red-text">16.1% illiterate</span></li>
+              <li class="flow-text"><span class="state">Louisiana</span>: <span class="red-text">16.0% illiterate</span></li>
+              <li class="flow-text"><span class="state">Mississippi</span>: <span class="red-text">16.0% illiterate</span></li>
             </ul>
           </div>
           <figure class="col s12">
-            <img class="responsive-img" src="/cali-flag.jpg" alt="California State Flag">
-            <figcaption class="center">California State Flag</figcaption>
+            <img class="responsive-img page-flag" src="img/cali-flag.jpg" alt="California State Flag">
+            <figcaption class="center flow-text">California has one of the highest illiteracy rates in the country, with about 23.1% of adults struggling to read and write well. This means that in California, nearly one out of four people live struggling to do basic tasks like reading instructions, understanding labels, and filling out forms and documents. There are a few reasons for this. First, some schools in California have large classes and not enough resources, which makes it harder for students to get the attention they need. Second, California has a very diverse population, with people speaking many different languages. This can make teaching reading and writing more challenging. Lastly, poverty can limit access to education, making it tougher for those to afford programs they desperately need.</figcaption>
           </figure>
         </div>
       </div>
-
-      {{!-- Parallax --}}
-      <div class="parallax-container z-depth-3">
-        <div class="parallax">
-          <img class="responsive-img" src="/parallax.avif">
-        </div>
-      </div>
+    
+      <img class="responsive-img z-depth-5" src="img/emilie-parallax.svg">
 
       <div class="container">
-        <div class="row">
-          <h3>States with Lowest Illiteracy Rates</h3>
+        <div class="row" id="lowest-state-illit">
+          <h3 class="center">States with Lowest Illiteracy Rates</h3>
           <div class="col s12">
-            <ul class="card">
-              <li>New Hampshire: 94.2% literate</li>
-              <li>Minnesota: 94.0% literate</li>
-              <li>North Dakota: 93.7% literate</li>
-              <li>Vermont: 93.4% literate</li>
-              <li>South Dakota: 93.0% literate</li>
-              <li>Nebraska: 92.7% literate</li>
-              <li>Wisconsin: 92.7% literate</li>
-              <li>Maine: 92.6% literate</li>
-              <li>Missouri: 92.5% literate</li>
-              <li>Iowa: 92.5% literate</li>
+            {{!-- Refactors this with a hbs helper when you get a chance --}}
+            <ul class="card center blue lighten-5">
+              <li class="flow-text"><span class="state">New Hampshire</span>: <span class="blue-text">94.2% literate</span></li>
+              <li class="flow-text"><span class="state">Minnesota</span>: <span class="blue-text">94.0% literate</span></li>
+              <li class="flow-text"><span class="state">North Dakota</span>: <span class="blue-text">93.7% literate</span></li>
+              <li class="flow-text"><span class="state">Vermont</span>: <span class="blue-text">93.4% literate</span></li>
+              <li class="flow-text"><span class="state">South Dakota</span>: <span class="blue-text">93.0% literate</span></li>
+              <li class="flow-text"><span class="state">Nebraska</span>: <span class="blue-text">92.7% literate</span></li>
+              <li class="flow-text"><span class="state">Wisconsin</span>: <span class="blue-text">92.7% literate</span></li>
+              <li class="flow-text"><span class="state">Maine</span>: <span class="blue-text">92.6% literate</span></li>
+              <li class="flow-text"><span class="state">Missouri</span>: <span class="blue-text">92.5% literate</span></li>
+              <li class="flow-text"><span class="state">Iowa</span>: <span class="blue-text">92.5% literate</span></li>
             </ul>
           </div>
           <figure class="col s12">
-            <img class="responsive-img" src="/new-hamp-flag.png" alt="New Hampshire State Flag">
-            <figcaption class="center italic">New Hampshire State Flag</figcaption>
+            <img class="responsive-img page-flag" src="img/new-hamp-flag.png" alt="New Hampshire State Flag">
+            <figcaption class="center flow-text">New Hampshire has the highest literacy rate in the United States, with 94.2% of adults able to read and write well. This means only a small number of people in New Hampshire struggle with reading or writing. One reason for this is that the state has a strong education system, supporting schools and teachers. Many people in New Hampshire also have college degrees, which shows how the state values education. New Hampshirians also have notably high usage of local libraries, showing that they enjoy reading and learning. Other Midwestern states have high literacy rates for many of the same reasons.</figcaption>
           </figure>
         </div>
       </div>
     </main>
-    
-
-    {{!-- Parallax --}}
-      <div class="parallax-container z-depth-3">
-        <div class="parallax">
-          <img class="responsive-img" src="/parallax.avif">
-        </div>
-      </div>
 
     <footer class="page-footer blue">
       <div class="container">

@@ -10,8 +10,8 @@ const hbs = require("hbs"); // hbs = handlebars
 const cors = require("cors");
 const { fetchFirstWorlds } = require("./utils/stats");
 const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
-const geocode = require("./utils/geocode"); // Import the geocode function
-const findLibraries = require("./utils/libraries"); // Import findLibraries function
+const { calcIllit } = require("./utils/illiterate");
+const { formatNumber } = require("./utils/format");
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
@@ -21,7 +21,7 @@ const app = express();
 
 // Allow all origins (for development purposes)
 app.use(cors());
-
+dotenv.config();
 const PORT = 3000; // Current port for development
 
 const clientDirPath = path.join(__dirname, "../client");
@@ -34,30 +34,24 @@ app.set("views", viewsPath);
 // rather than using static HTML files.
 app.set("view engine", "hbs");
 hbs.registerPartials(partialsPath);
+
+// Registering helpers
+hbs.registerHelper("calcIllit", calcIllit);
+hbs.registerHelper("formatNumber", formatNumber);
+
 // Setup static directory to serve
 app.use(express.static(clientDirPath));
 
-
 // This sets the views directory. Shows express the exact place to find views.
 // __dirname is a special var that gives abs. path of current directory
-
 
 // Serving Static files like Img's and CSS. Give us the abs. path to the client directory
 // console.log(path.join(__dirname, "../client", "img")); // Testing path
 app.use(express.static("client/img"));
 
-
 // Middleware to automatically parse JSON data into JS. Comes before routes (Ex: app.get())
 // Without Middleware, app wouldn't understand incoming data
 app.use(express.json());
-
-// Root Route/endpoint. Index.hbs page for our site
-app.get("/", (req, res) => {
-  // index.hbs rendered, no ext. needed
-  res.render("index", {
-    title: "Home | BookSprouts",
-  });
-});
 
 // Statistics Route/endpoint. statistics.hbs page for our site
 // Async because we're waiting for our fetchFirstWorlds() to fetch top 20 countries from api
@@ -65,15 +59,15 @@ app.get("/stats", async (req, res) => {
   // Try this block first
   try {
     // Waits for func to fetch the top 20 countries
-    const countriesData = await fetchFirstWorlds();
-    console.log(countriesData);
+    const firstWorldCountries = await fetchFirstWorlds();
+    console.log(firstWorldCountries);
 
     // statistics.hbs rendered, no ext. needed
     res.render("stats", {
       // Title
       title: "Stats | BookSprouts",
       // Array of countries
-      firstWorldCountries: countriesData,
+      firstWorldCountries: firstWorldCountries,
     });
   } catch (err) {
     // If there's an error, run this block containing error messages
@@ -118,50 +112,72 @@ app.get("/books", (req, res) => {
   });
 });
 
-// Route to handle the /library request
-app.get("/library", (req, res) => {
-  res.render("library", {
-    title: "Find a Local Library",
-  });
+// Creates a connection to mysql database
+const connection = mysql2.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 3306,
+  database: process.env.DB_NAME || 'ReadingLiteracyData',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'password'
 });
 
-app.get("/local", (req, res) => {
-  console.log("Received address:", req.query.address);  // This will show the address received in the request
+// Throws an error or success message if it can or can't connect to mysql server
+connection.connect(err => {
+  if (err) {
+    console.log('Error with connecting to mysql');
+  } else {
+    console.log('Connected to mysql successfully');
+  }
+});
 
-  if (!req.query.address) {
-    return res.send({
-      error: "You must provide an address",
-    });
+// Routes, fetch questions from the database
+app.get('/quiz', async (req, res) => {
+  connection.query('SELECT * FROM questions', (err, results) => {
+    if (err) {
+      console.log('Error fetching questions');
+      return res.status(500).send('Error fetching questions')
+    }
+    console.log(results);
+    res.render('quiz', { questions: results });
+  })
+}); 
+
+app.post('/submit-quiz', (req, res) => {
+  const answers = req.body; // Gets the submitted answers
+  let score = 0; // Starts score off as 0 
+
+  connection.query('SELECT id, correct_option FROM questions', (err, results) => {
+  if (err) {
+    console.log('Error fetching correct answers');
+    return res.status(500).send('Error fetching correct answers');
   }
 
-  // Get latitude and longitude from geocode
-  geocode(req.query.address, (error, { latitude, longitude, location }) => {
-    if (error) {
-      return res.send({ error });
+  // Map of correct answers
+  const correctAnswers = {};
+  results.forEach(question => {
+    correctAnswers[question.id] = question.correct_option;
+  });
+
+  // Calculates the score
+  // If the answer[questionId] is strictly equal to correctAnswers[questionId], then increase the score
+  for (const questionId in answers) {
+    if (answers[questionId] === correctAnswers[questionId]) {
+      score++;
     }
-    console.log('Latitude:', latitude, 'Longitude:', longitude);  // Log the coordinates
+  }
 
-    // Find libraries near the location
-    findLibraries(latitude, longitude, (error, libraries) => {
-      if (error) {
-        return res.send({ error });
-      }
-
-      // Log the libraries returned from Places API
-      console.log('Libraries found:', libraries);
-      
-      // Render libraries in view
-      res.render("libraries", {
-        title: "Local Libraries",
-        location,
-        libraries,
-      });
+  // This will stores the results in our sql results table 
+  const readingLevel = score >= 3 ? 'Intermediate' : 'Beginner';
+  connection.query('INSERT INTO results (score, reading_level) VALUES (?, ?)', [score, readingLevel], (err) => {
+    if (err) {
+      console.log('Error sending results to sql database');
+      return res.status(500).send('Error saving results');
+    }
+    // Sends back the result
+    res.json({ success: true, score, readingLevel});
     });
   });
 });
-
-
-
 // Starts the Express Server listening at a specific Port
 app.listen(PORT, () => {
   // render.com will give us this PORT when we deploy
