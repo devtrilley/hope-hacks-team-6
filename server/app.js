@@ -10,6 +10,9 @@ const hbs = require("hbs"); // hbs = handlebars
 const cors = require("cors");
 const { fetchFirstWorlds } = require("./utils/stats");
 const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
+const { calcIllit } = require("./utils/illiterate");
+const { formatNumber } = require("./utils/format");
+const svgo = require("svgo");
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
@@ -32,29 +35,24 @@ app.set("views", viewsPath);
 // rather than using static HTML files.
 app.set("view engine", "hbs");
 hbs.registerPartials(partialsPath);
+
+// Registering helpers
+hbs.registerHelper("calcIllit", calcIllit);
+hbs.registerHelper("formatNumber", formatNumber);
+
 // Setup static directory to serve
 app.use(express.static(clientDirPath));
 
-
 // This sets the views directory. Shows express the exact place to find views.
 // __dirname is a special var that gives abs. path of current directory
-
 
 // Serving Static files like Img's and CSS. Give us the abs. path to the client directory
 // console.log(path.join(__dirname, "../client", "img")); // Testing path
 app.use(express.static("client/img"));
 
-
 // Middleware to automatically parse JSON data into JS. Comes before routes (Ex: app.get())
 // Without Middleware, app wouldn't understand incoming data
 app.use(express.json());
-// Root Route/endpoint. Index.hbs page for our site
-app.get("/", (req, res) => {
-  // index.hbs rendered, no ext. needed
-  res.render("index", {
-    title: "Home | BookSprouts",
-  });
-});
 
 // Statistics Route/endpoint. statistics.hbs page for our site
 // Async because we're waiting for our fetchFirstWorlds() to fetch top 20 countries from api
@@ -62,15 +60,15 @@ app.get("/stats", async (req, res) => {
   // Try this block first
   try {
     // Waits for func to fetch the top 20 countries
-    const countriesData = await fetchFirstWorlds();
-    console.log(countriesData);
+    const firstWorldCountries = await fetchFirstWorlds();
+    console.log(firstWorldCountries);
 
     // statistics.hbs rendered, no ext. needed
     res.render("stats", {
       // Title
       title: "Stats | BookSprouts",
       // Array of countries
-      firstWorldCountries: countriesData,
+      firstWorldCountries: firstWorldCountries,
     });
   } catch (err) {
     // If there's an error, run this block containing error messages
