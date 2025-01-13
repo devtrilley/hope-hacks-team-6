@@ -10,8 +10,6 @@ const hbs = require("hbs"); // hbs = handlebars
 const cors = require("cors");
 const { fetchFirstWorlds } = require("./utils/stats");
 const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
-const geocode = require("./utils/geocode"); // Import the geocode function
-const findLibraries = require("./utils/libraries"); // Import findLibraries function
 const { calcIllit } = require("./utils/illiterate");
 const { formatNumber } = require("./utils/format");
 const svgo = require("svgo");
@@ -24,7 +22,7 @@ const app = express();
 
 // Allow all origins (for development purposes)
 app.use(cors());
-
+dotenv.config();
 const PORT = 3000; // Current port for development
 
 const clientDirPath = path.join(__dirname, "../client");
@@ -115,41 +113,72 @@ app.get("/books", (req, res) => {
   });
 });
 
-// Route to get findLibraries function
-app.get("/library", (req, res) => {
-  res.render("library", {
-    title: "Local Libraries",
-  });
+// Creates a connection to mysql database
+const connection = mysql2.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 3306,
+  database: process.env.DB_NAME || 'ReadingLiteracyData',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'password'
 });
 
-app.get("/library", (req, res) => {
-  const address = req.query.address; // Get address from query parameters
+// Throws an error or success message if it can or can't connect to mysql server
+connection.connect(err => {
+  if (err) {
+    console.log('Error with connecting to mysql');
+  } else {
+    console.log('Connected to mysql successfully');
+  }
+});
 
-  if (!address) {
-    res.status(400).send({ error: "Please provide a valid address" });
-    return;
+// Routes, fetch questions from the database
+app.get('/quiz', async (req, res) => {
+  connection.query('SELECT * FROM questions', (err, results) => {
+    if (err) {
+      console.log('Error fetching questions');
+      return res.status(500).send('Error fetching questions')
+    }
+    console.log(results);
+    res.render('quiz', { questions: results });
+  })
+}); 
+
+app.post('/submit-quiz', (req, res) => {
+  const answers = req.body; // Gets the submitted answers
+  let score = 0; // Starts score off as 0 
+
+  connection.query('SELECT id, correct_option FROM questions', (err, results) => {
+  if (err) {
+    console.log('Error fetching correct answers');
+    return res.status(500).send('Error fetching correct answers');
   }
 
-  // Get geolocation from address provided
-  geocode(address, (error, { latitude, longitude, location } = {}) => {
-    if (error) {
-      return res.render("error", {
-        message: "Unable to find location. Try again.",
-      });
+  // Map of correct answers
+  const correctAnswers = {};
+  results.forEach(question => {
+    correctAnswers[question.id] = question.correct_option;
+  });
+
+  // Calculates the score
+  // If the answer[questionId] is strictly equal to correctAnswers[questionId], then increase the score
+  for (const questionId in answers) {
+    if (answers[questionId] === correctAnswers[questionId]) {
+      score++;
     }
-    // Find libraries near thhe geolocation
-    findLibraries(latitude, longitude, (error, libraries) => {
-      if (error) {
-        return res.render("error", {
-          message: "No libraries found near this location.",
-        });
-      }
-      // Render the library.hbs template w/ library data
-      res.render("library", { location, libraries });
+  }
+
+  // This will stores the results in our sql results table 
+  const readingLevel = score >= 3 ? 'Intermediate' : 'Beginner';
+  connection.query('INSERT INTO results (score, reading_level) VALUES (?, ?)', [score, readingLevel], (err) => {
+    if (err) {
+      console.log('Error sending results to sql database');
+      return res.status(500).send('Error saving results');
+    }
+    // Sends back the result
+    res.json({ success: true, score, readingLevel});
     });
   });
 });
-
 // Starts the Express Server listening at a specific Port
 app.listen(PORT, () => {
   // render.com will give us this PORT when we deploy

@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   gradeLevels.forEach((grade) => {
     const button = document.createElement("button");
+    button.classList.add("grade-button"); // Materialize button class
     button.textContent = grade.name;
     button.onclick = () => {
       // Redirect to /books with the correct grade level as a query parameter
@@ -21,9 +22,3 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(button);
   });
 });
-
-// Code to get the form to work and not refresh on submit
-const libraryForm = document.querySelector('form');
-
-libraryForm.addEventListener("submit", (e) => {
-  e.preventDefault();})

@@ -1,0 +1,67 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #A9D7F1, #fffae6);
+  color: #333;
+}
+.main-content {
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 50px;
+}
+
+h1 {
+  color: #2F3C5A; 
+  font-size: 3rem;
+  margin-bottom: 30px;
+}
+
+.intro-card {
+  background-color: #fff;
+  padding: 20px;
+  margin: 20px auto;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.intro-card h2 {
+  font-size: 1.8rem;
+  color: #ff6f61;
+  margin-bottom: 15px;
+}
+
+.intro-card p {
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+#grade-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+.grade-button {
+  background-color: #FF7F7F; 
+  color: white;
+  font-size: 1.2rem;
+  padding: 15px 30px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s ease;
+}
+.grade-button:hover {
+  background-color: #FF4F4F;
+}
+.grade-button:focus {
+  outline: none;
+}

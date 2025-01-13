@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{title}}</title>
     <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="/css/reading.css">
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
@@ -13,11 +14,18 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
     ></script>
   </head>
-  <body>
-    <section class="main-content">
+    <body>
+      {{>header}}
+    <main class="main-content">
       <h1>{{title}}</h1>
+      <div class="intro-card">
+      <h2>Welcome to Your Reading Level</h2>
+         <p>Welcome to your personalized reading level selection! Based on your performance in the pre-assessment, we’ve tailored the available options to match your current reading level. Choose a grade level below to discover books, quizzes, and activities designed to enhance your skills and help you grow as a reader. Let’s get started on your reading journey!</p>
+      </div>
+
       <div id="grade-buttons"></div>
-    </section>
+    </main>
+    {{>footer}}
     <script src="/js/app.js"></script>
   </body>
 </html>
