@@ -83,6 +83,13 @@ app.get("/stats", async (req, res) => {
   }
 });
 
+//Route to get to audio literacy paage 
+app.get("/audioliteracy", async (req,res) => {
+  res.render("audioliteracy", {
+    title: "Audio Literacy | BookSprouts",
+  });
+})
+
 // Route to get bookSuggestions function and pass the reading level
 app.get("/readinglevel", (req, res) => {
   res.render("readinglevel", {

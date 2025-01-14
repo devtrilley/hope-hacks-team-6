@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+main {
+  padding-bottom: 50px;
+}
+
 /* css for home page */
 .hero-section {
   max-width: 100%;
@@ -26,7 +30,7 @@ body {
   background: rgb(255, 255, 255);
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 255, 255, 1) 40%,
     rgba(0, 186, 209, 1) 82%
   );
 }
@@ -72,7 +76,6 @@ h3 {
 
 .carousel {
   height: 500px;
-  /* margin-top: -95px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -131,12 +134,6 @@ h4 {
 }
 
 .paragraph {
-  /* font-size: 18px;
-    text-align: left;
-    font-family: museo-sans;
-    line-height: 160%; */
-  /* margin-left: 9rem; */
-  /* object-fit:fill; */
   flex: 1;
   font-size: 1.3rem;
   line-height: 1.8;
@@ -147,12 +144,6 @@ h4 {
 }
 
 .paragraph2 {
-  /* font-size: 18px;
-    text-align: left;
-    font-family: museo-sans;
-    line-height: 160%; */
-  /* object-fit:fill; */
-  /* margin-right: 8rem ; */
   flex: 1;
   font-size: 1.3rem;
   line-height: 1.8;
