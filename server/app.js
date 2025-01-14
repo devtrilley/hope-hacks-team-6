@@ -10,8 +10,8 @@ const hbs = require("hbs"); // hbs = handlebars
 const cors = require("cors");
 const { fetchFirstWorlds } = require("./utils/stats");
 const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
-const geocode = require("./utils/geocode"); // Import the geocode function
-const findLibraries = require("./utils/libraries"); // Import findLibraries function
+const { calcIllit } = require("./utils/illiterate");
+const { formatNumber } = require("./utils/format");
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
@@ -34,6 +34,11 @@ app.set("views", viewsPath);
 // rather than using static HTML files.
 app.set("view engine", "hbs");
 hbs.registerPartials(partialsPath);
+
+// Registering helpers
+hbs.registerHelper("calcIllit", calcIllit);
+hbs.registerHelper("formatNumber", formatNumber);
+
 // Setup static directory to serve
 app.use(express.static(clientDirPath));
 app.use(express.urlencoded({ extended: true }));
@@ -42,22 +47,19 @@ app.use('/server/utils', express.static(path.join(__dirname, 'utils')));
 // This sets the views directory. Shows express the exact place to find views.
 // __dirname is a special var that gives abs. path of current directory
 
-
 // Serving Static files like Img's and CSS. Give us the abs. path to the client directory
 // console.log(path.join(__dirname, "../client", "img")); // Testing path
 app.use(express.static("client/img"));
 
-
 // Middleware to automatically parse JSON data into JS. Comes before routes (Ex: app.get())
 // Without Middleware, app wouldn't understand incoming data
 app.use(express.json());
-// Root Route/endpoint. Index.hbs page for our site
-app.get("/", (req, res) => {
-  // index.hbs rendered, no ext. needed
+
+app.get("/", async (req,res) => {
   res.render("index", {
     title: "Home | BookSprouts",
   });
-});
+})
 
 // Statistics Route/endpoint. statistics.hbs page for our site
 // Async because we're waiting for our fetchFirstWorlds() to fetch top 20 countries from api
@@ -65,15 +67,15 @@ app.get("/stats", async (req, res) => {
   // Try this block first
   try {
     // Waits for func to fetch the top 20 countries
-    const countriesData = await fetchFirstWorlds();
-    console.log(countriesData);
+    const firstWorldCountries = await fetchFirstWorlds();
+    console.log(firstWorldCountries);
 
     // statistics.hbs rendered, no ext. needed
     res.render("stats", {
       // Title
       title: "Stats | BookSprouts",
       // Array of countries
-      firstWorldCountries: countriesData,
+      firstWorldCountries: firstWorldCountries,
     });
   } catch (err) {
     // If there's an error, run this block containing error messages
@@ -82,6 +84,13 @@ app.get("/stats", async (req, res) => {
     res.status(500).send("Error fetching First World Countries");
   }
 });
+
+//Route to get to audio literacy paage 
+app.get("/audioliteracy", async (req,res) => {
+  res.render("audioliteracy", {
+    title: "Audio Literacy | BookSprouts",
+  });
+})
 
 // Route to get bookSuggestions function and pass the reading level
 app.get("/readinglevel", (req, res) => {
@@ -115,48 +124,6 @@ app.get("/books", (req, res) => {
         message: "No books found for this level",
       });
     }
-  });
-});
-
-// Route to handle the /library request
-app.get("/library", (req, res) => {
-  res.render("library", {
-    title: "Find a Local Library",
-  });
-});
-
-app.get("/local", (req, res) => {
-  console.log("Received address:", req.query.address);  // This will show the address received in the request
-
-  if (!req.query.address) {
-    return res.send({
-      error: "You must provide an address",
-    });
-  }
-
-  // Get latitude and longitude from geocode
-  geocode(req.query.address, (error, { latitude, longitude, location }) => {
-    if (error) {
-      return res.send({ error });
-    }
-    console.log('Latitude:', latitude, 'Longitude:', longitude);  // Log the coordinates
-
-    // Find libraries near the location
-    findLibraries(latitude, longitude, (error, libraries) => {
-      if (error) {
-        return res.send({ error });
-      }
-
-      // Log the libraries returned from Places API
-      console.log('Libraries found:', libraries);
-
-      // Render libraries in view
-      res.render("libraries", {
-        title: "Local Libraries",
-        location,
-        libraries,
-      });
-    });
   });
 });
 

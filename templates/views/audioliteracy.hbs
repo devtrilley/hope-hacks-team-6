@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logo.png">
+    <link rel="stylesheet" href="/css/literacy.css">
+    <title>Audio Literacy</title>
+</head>
+<body>
+    {{>header}}
+    <main class="main">
+    <!-- hero -->
+    <header class="hero-section">
+        <h1>Make Reading Fun with Audio Stories</h1>
+    </header>
+    <!-- informational content -->
+    <div class="hold">
+        <div class="header">
+            <h1>What is audio assisted reading?</h1>
+            <p> Audio-assisted reading is a powerful method that combines listening to narrated texts with following along in print, enhancing literacy skills such as fluency, pronunciation, comprehension, and critical listening. By exposing children to proper pacing, intonation, and vocabulary, it builds confidence and reduces frustration, especially for those who find traditional reading challenging. This approach fosters a love for reading and makes it more engaging and accessible.</p>
+            <p>While our library is small for now, we are actively working on adding more content like this to expand your options. In the meantime, we hope these examples provide valuable exposure to this effective learning method and inspire your child’s love for reading!</p>
+        </div>
+        <div class="card">
+            <h2>Alice in Wonderland</h2>
+            <p>Read by: Morgan Moncur for Grades 4-5</p>
+            <div id="content" class="vertical-scroll"></div>
+            <audio src="/audio/rabitHole.mp3" type="audio/mp3" controls></audio>
+        </div>
+        <div class="card">
+            <h2>Sam I am </h2>
+            <p>Read by: Sky Patterson-Baker and Morgan Moncur for Grades K-2</p>
+            <div id="fill" class="vertical-scroll"></div>
+            <audio src="/audio/samsam.mp3" type="audio/mp3" controls></audio>
+            </div>
+        </div>
+    </div>
+    </main>
+    {{>footer}}
+    <script src="./js/content.js"></script>
+</body>
+</html>
