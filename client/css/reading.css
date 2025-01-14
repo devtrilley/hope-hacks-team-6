@@ -1,6 +1,11 @@
 body {
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #A9D7F1, #fffae6);
+  font-family: "Roboto", sans-serif;
+  background: rgb(0, 186, 209);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 186, 209, 1) 31%,
+    rgba(255, 255, 255, 1) 66%
+  );
   color: #333;
 }
 .main-content {
@@ -12,21 +17,22 @@ body {
 }
 
 h1 {
-  color: #2F3C5A; 
+  color: #fff;
   font-size: 3rem;
   margin-bottom: 30px;
+  font-family: museo-sans;
 }
 
 .intro-card {
   background-color: #fff;
-  padding: 20px;
+  padding: 5px;
   margin: 20px auto;
   width: 80%;
   max-width: 600px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .intro-card h2 {
@@ -42,26 +48,83 @@ h1 {
 }
 
 #grade-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-items: center;
+  margin: 20px;
+}
+
+.grade-group {
   display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-  margin-top: 40px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
+
+.grade-image {
+  width: 100%;
+  height: 100%;
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
 .grade-button {
-  background-color: #FF7F7F; 
-  color: white;
-  font-size: 1.2rem;
+  display: block;
+  width: 90%;
+  max-width: 300px;
   padding: 15px 30px;
-  border-radius: 25px;
   border: none;
-  cursor: pointer;
+  border-radius: 50px;
+  font-size: 1.2rem;
   margin: 10px;
-  transition: background-color 0.3s ease;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  text-align: center;
+  font-family: inter;
 }
+
 .grade-button:hover {
-  background-color: #FF4F4F;
+  background-color: #ff4f4f;
+  transform: translateY(-5px);
 }
 .grade-button:focus {
   outline: none;
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  #grade-buttons {
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+    gap: 15px;
+  }
+
+  .grade-button {
+    font-size: 0.9rem; /* Slightly smaller text */
+    padding: 0.8em; /* Smaller padding */
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 480px) {
+  #grade-buttons {
+    grid-template-columns: 1fr; /* 1 item per row */
+    gap: 10px;
+  }
+
+  .grade-button {
+    font-size: 0.8rem; /* Smaller text */
+    padding: 0.6em;
+  }
+
+  .grade-image {
+    width: 80%; /* Make images smaller */
+  }
 }
