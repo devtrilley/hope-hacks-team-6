@@ -4,50 +4,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/quiz.css">
-  <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <title>{{title}}</title>
 </head>
 <body>
   {{>header}}
   <main>
-    <div class="container center">
-      <h1>Reading Level Quiz</h1>
-      <p>Please take the reading quiz</p>
-      <form action="/submit-quiz" method="POST">
-        {{! Looping through each question}}
-        {{#each questions}}
-          <div class="question">
-            <p>{{this.question}}</p>
-            <div class="options">
-              <label>
-                <input type="radio" name="answer{{this.id}}" value="A"/>
-                <span>{{this.option_a}}</span>
-              </label>
-              <label>
-                <input type="radio" name="answer{{this.id}}" value="B"/>
-                <span>{{this.option_b}}</span>
-              </label>
-              <label>
-                <input type="radio" name="answer{{this.id}}" value="C"/>
-                <span>{{this.option_c}}</span>
-              </label>
-              <label>
-                <input type="radio" name="answer{{this.id}}" value="D"/>
-                <span>{{this.option_d}}</span>
-              </label>
-            </div>
-          </div>
-          {{/each}}
-          <button type="submit">Submit</button>
-      </form>
+    <div id="result-modal" class="modal">
+      <div class="modal-content">
+        <h4>Quiz Results</h4>
+        <p id="modal-score">Score: </p>
+        <p id="modal-reading-level">Reading Level: </p>
+        <a class="btn" href="/readinglevel">Click Here for Books To Read</a>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="modal-close waves-effect waves-green btn-flat">Close</a>
     </div>
-  </main>
+  </div>
+<div class="container center">
+  <h1>Reading Level Quiz</h1>
+  <p>Please take the reading quiz</p>
+  <form method="POST" action="/submit-quiz" id="quiz-form">
+    {{#each questions}}
+      <div class="question">
+      <p>{{this.question}}</p>
+      <div class="options">
+        {{#each this.options}}
+          <label>
+            <input type="radio" name="{{../id}}" value="{{this.choice}}" required checked/>
+            <span>{{this.value}}</span>
+          </label>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+      <button class="waves-effect waves-green btn-flat" type="submit">Submit</button>
+    </form>
+  </div>
+</main>
 
 
   <!-- Compiled and minified JavaScript -->
+  {{>footer}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="/server/utils/quiz.js"></script>
-  {{>footer}}
 </body>
 </html>

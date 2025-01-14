@@ -1,0 +1,47 @@
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.cus-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 2rem;
+  cursor: pointer;
+}
+
+.modal-content h4 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+.modal-content p,
+a {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  color: #555;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.modal-footer .btn-flat {
+  background-color: #4caf50;
+  color: white;
+}
+
+.question {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}

@@ -41,6 +41,8 @@ hbs.registerHelper("formatNumber", formatNumber);
 
 // Setup static directory to serve
 app.use(express.static(clientDirPath));
+app.use(express.urlencoded({ extended: true }));
+app.use('/server/utils', express.static(path.join(__dirname, 'utils')));
 
 // This sets the views directory. Shows express the exact place to find views.
 // __dirname is a special var that gives abs. path of current directory
@@ -127,11 +129,11 @@ app.get("/books", (req, res) => {
 
 // Creates a connection to mysql database
 const connection = mysql2.createConnection({
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'database-1.cpio2yskwx8h.us-east-2.rds.amazonaws.com',
   port: process.env.DB_PORT || 3306,
   database: process.env.DB_NAME || 'ReadingLiteracyData',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'password'
+  user: process.env.DB_USER || 'admin',
+  password: process.env.DB_PASSWORD || 'z4frv9sjhcmp5gre'
 });
 
 // Throws an error or success message if it can or can't connect to mysql server
@@ -143,59 +145,108 @@ connection.connect(err => {
   }
 });
 
-// Routes, fetch questions from the database
-app.get('/quiz', async (req, res) => {
-  connection.query('SELECT * FROM questions', (err, results) => {
+// Routes and Queries the questions from the database, selects the questions and option tables
+// Gives errors if it cant fetch questions
+app.get("/quiz", (req, res) => {
+  const query = `
+    SELECT q.id AS question_id, q.question, q.correct_answer,
+           o.answer_choice, o.answer_value
+    FROM questions q
+    LEFT JOIN option_items o ON q.id = o.question_id
+    ORDER BY q.id, o.answer_choice;
+  `;
+
+  connection.query(query, (err, results) => {
     if (err) {
-      console.log('Error fetching questions');
-      return res.status(500).send('Error fetching questions')
+      console.error("Error fetching questions:", err);
+      return res.status(500).send("Error fetching questions.");
     }
-    console.log(results);
-    res.render('quiz', { questions: results });
-  })
-}); 
 
-app.post('/submit-quiz', (req, res) => {
-  const answers = req.body; // Gets the submitted answers
-  let score = 0; // Starts score off as 0 
 
-  connection.query('SELECT id, correct_option FROM questions', (err, results) => {
-  if (err) {
-    console.log('Error fetching correct answers');
-    return res.status(500).send('Error fetching correct answers');
-  }
+    // Creates an empty array called questionsArray, loops through each row of results, then checks if a question with the same id already exists
+    // If the question with the same id already exists, then it will retrieve the question, if not, then it will create a new question object and
+    // will fill out the properties. The question is then pushed into the questionsArray
+    const questionsArray = [];
+    results.forEach((row) => {
+      let question = questionsArray.find((q) => q.id === row.question_id);
+      if (!question) {
+        question = {
+          id: row.question_id,
+          question: row.question,
+          correct_answer: row.correct_answer,
+          options: [],
+        };
+        questionsArray.push(question);
+      }
+      // Adds the question options to options array of the corresponding questions
+      question.options.push({
+        choice: row.answer_choice,
+        value: row.answer_value,
+      });
+    });
 
-  // Map of correct answers
-  const correctAnswers = {};
-  results.forEach(question => {
-    correctAnswers[question.id] = question.correct_option;
+    res.render('quiz', { questions: questionsArray });
   });
+});
 
-  // Calculates the score
-  // If the answer[questionId] is strictly equal to correctAnswers[questionId], then increase the score
-  for (const questionId in answers) {
-    if (answers[questionId] === correctAnswers[questionId]) {
-      score++;
-    }
-  }
+// Handle quiz submission
+app.post("/submit-quiz", (req, res) => {
+  const userAnswers = req.body; // User-submitted answers
+  let score = 0; // Starts the score at 0 
 
-  // This will stores the results in our sql results table 
-  const readingLevel = score >= 3 ? 'Intermediate' : 'Beginner';
-  connection.query('INSERT INTO results (score, reading_level) VALUES (?, ?)', [score, readingLevel], (err) => {
+  // SQL query to fetch the question_ids and correct_answers from the sql database
+  const query = `
+    SELECT id AS question_id, correct_answer FROM questions;
+  `;
+
+  connection.query(query, (err, results) => {
     if (err) {
-      console.log('Error sending results to sql database');
-      return res.status(500).send('Error saving results');
+      console.error("Error fetching correct answers:", err);
+      return res.status(500).send("Error fetching correct answers.");
     }
-    // Sends back the result
-    res.json({ success: true, score, readingLevel});
+
+    // Maps the results to create an array with their correct answers 
+    const questionsArray = results.map((row) => ({
+      id: row.question_id,
+      correctAnswer: row.correct_answer,
+    }));
+
+    // Calculate the score
+    questionsArray.forEach((question) => {
+      const userAnswer = userAnswers[question.id]; // Users answer for the current question
+      if (userAnswer === question.correctAnswer) { // Checks if the users answer is correct
+        score++; // If the answer is correct and matches the correct answer id, then the score increases by 1
+      }
+    });
+
+    // Determine users reading level
+    let readingLevel = "Kindergarten";
+    if (score >= 4 && score <= 6) readingLevel = "Grade 1";
+    else if (score >= 7 && score <= 9) readingLevel = "Grade 2";
+    else if (score >= 10 && score <= 12) readingLevel = "Grade 3";
+    else if (score >= 13 && score <= 15) readingLevel = "Grade 4";
+    else if (score >= 16 && score <= 18) readingLevel = "Grade 5";
+
+
+    // SQL query to insert the users score and reading level to the sql results table in the database
+    const insertQuery = `
+      INSERT INTO results (score, reading_level) VALUES (?, ?);
+    `;
+    // Executes insert query and checks for errors 
+    connection.query(insertQuery, [score, readingLevel], (insertErr) => {
+      if (insertErr) {
+        console.error("Error saving results to database:", insertErr);
+        return res.status(500).send("Error saving results.");
+      }
+      
+      res.json({ success: true,  score, readingLevel });
     });
   });
 });
+
+
 // Starts the Express Server listening at a specific Port
 app.listen(PORT, () => {
   // render.com will give us this PORT when we deploy
   console.log(`Server is live at http://localhost:${PORT}`);
 });
-
-// Todo's
-// Define the paths using that module
