@@ -1,14 +1,15 @@
-BookSprouts
+#BookSprouts
 Developers: Tom Rilley, Morgan Moncur, Tyler Krug, Sky Patterson-Baker
 
-Project Overview
+##Project Overview
 BookSprouts is a project created to raise awareness about illiteracy in America, particularly focusing on youth literacy. The website allows users to:
 
 Take a pretest to assess their reading level.
 Get personalized book recommendations based on their reading level.
 Learn about global and U.S. illiteracy statistics.
 View book suggestions dynamically displayed as cards based on the user's reading level from the aforementioned pretest.
-Table of Contents
+
+##Table of Contents
 Installation Instructions
 Usage
 Technologies Used
@@ -16,11 +17,13 @@ Project Structure
 Database Setup
 License
 Contact
-Installation Instructions
-Prerequisites:
+
+##Installation Instructions
+###Prerequisites:
 Node.js (v12 or higher)
 MySQL (hosted on Amazon RDS for this project)
-Steps:
+
+##Steps:
 Clone the repository:
 
 bash
@@ -68,7 +71,7 @@ Copy code
 node server/app.js
 The server will be running on http://localhost:3000.
 
-Usage
+##Usage
 Navigate to http://localhost:3000 to visit the homepage.
 Take the Reading Level Quiz: Access the quiz at http://localhost:3000/quiz, answer the questions, and get your reading level.
 Get Book Recommendations: After completing the quiz, you'll be directed to a page with book suggestions based on your reading level.
@@ -90,9 +93,9 @@ Project Structure
 Database Setup
 The database for storing quiz results and user information is hosted on Amazon RDS. The connection details are set up in the .env file.
 
-License
+##License
 This project is licensed under the MIT License.
 
-Contact
+##Contact
 For any inquiries or feedback, you can reach out via booksprouts@gmail.com.
 
