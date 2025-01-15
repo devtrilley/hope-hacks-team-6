@@ -7,13 +7,6 @@
   padding: 20px;
 }
 
-.cus-close {
-  position: absolute;
-  top: 1.2rem;
-  right: 2rem;
-  cursor: pointer;
-}
-
 .modal-content h4 {
   font-size: 1.8rem;
   margin-bottom: 20px;
@@ -24,7 +17,6 @@
 .modal-content p,
 a {
   font-size: 1.2rem;
-  margin: 10px 0;
   color: #555;
 }
 

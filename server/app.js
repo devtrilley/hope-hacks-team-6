@@ -12,6 +12,7 @@ const { fetchFirstWorlds } = require("./utils/stats");
 const bookSuggestions = require("./utils/book"); // Import the bookSuggestions function
 const { calcIllit } = require("./utils/illiterate");
 const { formatNumber } = require("./utils/format");
+const { resolve } = require('path');
 
 // Calling express() func wich starts our server, storing it in app variable
 // app is our server. handles all requests and sends responses.
@@ -21,7 +22,12 @@ const app = express();
 
 // Allow all origins (for development purposes)
 app.use(cors());
-dotenv.config();
+dotenv.config({ path: resolve(__dirname, '.env') });
+console.log("Environment variables loaded:");
+console.log("DB_HOST:", process.env.DB_HOST);
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_NAME:", process.env.DB_NAME);
+console.log("DB_PASSWORD", process.env.DB_PASSWORD);
 const PORT = 3000; // Current port for development
 
 const clientDirPath = path.join(__dirname, "../client");
@@ -128,12 +134,13 @@ app.get("/books", (req, res) => {
 });
 
 // Creates a connection to mysql database
-const connection = mysql2.createConnection({
+const connection = mysql2.createConnection({          
   host: process.env.DB_HOST || 'database-1.cpio2yskwx8h.us-east-2.rds.amazonaws.com',
   port: process.env.DB_PORT || 3306,
   database: process.env.DB_NAME || 'ReadingLiteracyData',
   user: process.env.DB_USER || 'admin',
-  password: process.env.DB_PASSWORD || 'z4frv9sjhcmp5gre'
+  password: process.env.DB_PASSWORD || 'z4frv9sjhcmp5gre',
+  waitForConnections: true
 });
 
 // Throws an error or success message if it can or can't connect to mysql server
